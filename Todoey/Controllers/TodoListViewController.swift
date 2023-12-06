@@ -42,7 +42,7 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    //MARK: - Add new items
+//MARK: - Add new items
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
@@ -58,6 +58,7 @@ class TodoListViewController: UITableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.done = false
+                        newItem.date = Date()
                         currentCate.items.append(newItem)
                     }
                 } catch {
@@ -93,13 +94,24 @@ class TodoListViewController: UITableViewController {
 //MARK: - UISearchBarDelegate
 extension TodoListViewController : UISearchBarDelegate {
     
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        
-//        if searchBar.text?.count == 0 {
-//            
-//            // load data
-//            loadItems()
-//        }else {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        // resign first responder
+        searchBar.resignFirstResponder()
+    }
+    
+    // be called when text changes
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText.count == 0 {
+            
+            // load data
+            self.load()
+        }else {
+            
+            itemArray = selectedCategory?.items.filter("title CONTAINS[cd] %@", searchText).sorted(byKeyPath: "title", ascending: true)
+            
+            tableView.reloadData()
 //            // create a request
 //            let request : NSFetchRequest<Item> = Item.fetchRequest()
 //            
@@ -111,33 +123,8 @@ extension TodoListViewController : UISearchBarDelegate {
 //            
 //            // load data
 //            loadItems(with: request, predicate: NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!))
-//        }
-//        
-//        // resign first responder
-//        searchBar.resignFirstResponder()
-//    }
-//    
-//    // be called when text changes
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        
-//        if searchText.count == 0 {
-//            
-//            // load data
-//            loadItems()
-//        }else {
-//            // create a request
-//            let request : NSFetchRequest<Item> = Item.fetchRequest()
-//            
-//            // do the search
-////            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//            
-//            // sort the result by title in ascending order
-//            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//            
-//            // load data
-//            loadItems(with: request, predicate: NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!))
-//        }
-//    }
+        }
+    }
 }
 
 //MARK: - FileManager
@@ -178,7 +165,7 @@ extension TodoListViewController {
     
     
     func load() {
-        itemArray = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        itemArray = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         tableView.reloadData()
     }
 }

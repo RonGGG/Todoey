@@ -163,6 +163,16 @@ extension CategoryViewController {
 //        
 //        saveCategories()
         
+        if let cate = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(cate)
+                }
+            } catch {
+                print("Error deleting cate from categories, \(error)")
+            }
+        }
         
+        tableView.reloadData()
     }
 }
