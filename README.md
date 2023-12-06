@@ -1,10 +1,10 @@
-# Todoey ✓
+# Todoey
 
 ## Introduction
 Todoey is a streamlined and efficient iOS to-do list application designed to help users keep track of daily tasks and enhance organization in both life and work. With Todoey, you can easily add, manage, and monitor your day-to-day tasks and agendas.
 
 ## Libraries used
-### Realm
+- Realm
 
 ## Features 
 - Task Addition: 
