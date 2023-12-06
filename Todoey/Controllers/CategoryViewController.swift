@@ -8,20 +8,29 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    // create itemarray
-    var categories = [CategoryEnt]()
+    // create array using CoreData
+//    var categories = [CategoryEnt]()
+    
+    // create array using realm
+    let realm = try! Realm()
+    
+    // Results is an auto-updating container type in Realm returned from object queries.
+    var categories: Results<Category>?
     
 
     // context of CoreData
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadCategories()
+//        print(Realm.Configuration.defaultConfiguration.fileURL)
+//        loadCategories()
+        self.load()
     }
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -36,14 +45,16 @@ class CategoryViewController: UITableViewController {
             
             if let textField = alert.textFields?.first, let text = textField.text {
                 // create an item
-                let cate = CategoryEnt(context: self.context)
+//                let cate = CategoryEnt(context: self.context)
+                let cate = Category()
                 cate.name = text
                 
                 // append the item to itemArray
-                self.categories.append(cate)
+//                self.categories.append(cate)
     
                 // save items after appending
-                self.saveCategories()
+//                self.saveCategories()
+                self.save(category: cate)
             }
         })
         
@@ -54,26 +65,45 @@ class CategoryViewController: UITableViewController {
 
 //MARK: - Core data
 extension CategoryViewController {
-    func loadCategories(with request: NSFetchRequest<CategoryEnt> = CategoryEnt.fetchRequest() ) {
+    
+    func save(category: Category) {
+        
         do {
-            categories = try context.fetch(request)
-        }
-        catch {
-            print("Load categories error: \(error)")
+            try realm.write {
+                realm.add(category)
+            }
+        } catch  {
+            print("Error saving category, \(error)")
         }
         
         tableView.reloadData()
     }
-    func saveCategories() {
-        do {
-            try context.save()
-        }
-        catch {
-            print("Save categories error: \(error)")
-        }
+    func load() {
+        
+        categories = realm.objects(Category.self)
         
         tableView.reloadData()
     }
+//    func loadCategories(with request: NSFetchRequest<CategoryEnt> = CategoryEnt.fetchRequest() ) {
+//        do {
+//            categories = try context.fetch(request)
+//        }
+//        catch {
+//            print("Load categories error: \(error)")
+//        }
+//        
+//        tableView.reloadData()
+//    }
+//    func saveCategories() {
+//        do {
+//            try context.save()
+//        }
+//        catch {
+//            print("Save categories error: \(error)")
+//        }
+//        
+//        tableView.reloadData()
+//    }
 }
 
 //MARK: - Table view delegate
@@ -93,7 +123,7 @@ extension CategoryViewController {
         // pass the element to destination VC
         if let indexPath = tableView.indexPathForSelectedRow {
             
-            destinationVC.selectedCategory = categories[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
             
         }
     }
@@ -106,7 +136,7 @@ extension CategoryViewController {
 //    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -114,8 +144,11 @@ extension CategoryViewController {
         // set up reusable cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "CateItemCell", for: indexPath)
         
-        // set title for cell
-        cell.textLabel?.text = categories[indexPath.row].name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
+//        if let category = categories?[indexPath.row] {
+//            // set title for cell
+//            cell.textLabel?.text = category.name
+//        }
         
         cell.accessoryType = .disclosureIndicator
         
@@ -124,10 +157,12 @@ extension CategoryViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        context.delete(categories[indexPath.row])
+//        context.delete(categories[indexPath.row])
+//        
+//        categories.remove(at: indexPath.row)
+//        
+//        saveCategories()
         
-        categories.remove(at: indexPath.row)
         
-        saveCategories()
     }
 }

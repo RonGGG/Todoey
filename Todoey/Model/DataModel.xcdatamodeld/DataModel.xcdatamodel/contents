@@ -2,9 +2,9 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="23B81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="CategoryEnt" representedClassName=".CategoryEnt" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="cateToItem" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Item" inverseName="itemToCate" inverseEntity="Item"/>
+        <relationship name="cateToItem" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ItemEnt" inverseName="itemToCate" inverseEntity="ItemEnt"/>
     </entity>
-    <entity name="Item" representedClassName=".Item" syncable="YES" codeGenerationType="class">
+    <entity name="ItemEnt" representedClassName=".ItemEnt" syncable="YES" codeGenerationType="class">
         <attribute name="done" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="itemToCate" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CategoryEnt" inverseName="cateToItem" inverseEntity="CategoryEnt"/>
