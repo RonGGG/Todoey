@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import CoreData
+//import CoreData
 import RealmSwift
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
     // create array using CoreData
 //    var categories = [CategoryEnt]()
@@ -45,15 +45,9 @@ class CategoryViewController: UITableViewController {
             
             if let textField = alert.textFields?.first, let text = textField.text {
                 // create an item
-//                let cate = CategoryEnt(context: self.context)
                 let cate = Category()
                 cate.name = text
-                
-                // append the item to itemArray
-//                self.categories.append(cate)
-    
-                // save items after appending
-//                self.saveCategories()
+
                 self.save(category: cate)
             }
         })
@@ -61,9 +55,21 @@ class CategoryViewController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
 
     }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let cate = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(cate)
+                }
+            } catch {
+                print("Error deleting cate from categories, \(error)")
+            }
+        }
+    }
 }
 
-//MARK: - Core data
+//MARK: - Realm
 extension CategoryViewController {
     
     func save(category: Category) {
@@ -84,33 +90,11 @@ extension CategoryViewController {
         
         tableView.reloadData()
     }
-//    func loadCategories(with request: NSFetchRequest<CategoryEnt> = CategoryEnt.fetchRequest() ) {
-//        do {
-//            categories = try context.fetch(request)
-//        }
-//        catch {
-//            print("Load categories error: \(error)")
-//        }
-//        
-//        tableView.reloadData()
-//    }
-//    func saveCategories() {
-//        do {
-//            try context.save()
-//        }
-//        catch {
-//            print("Save categories error: \(error)")
-//        }
-//        
-//        tableView.reloadData()
-//    }
 }
 
 //MARK: - Table view delegate
 extension CategoryViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-//        tableView.deselectRow(at: indexPath, animated: true)
         
         performSegue(withIdentifier: "goToItems", sender: self)
     }
@@ -131,9 +115,6 @@ extension CategoryViewController {
 
 // MARK: - Table view data source
 extension CategoryViewController {
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        return itemArray.count
-//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories?.count ?? 1
@@ -141,38 +122,28 @@ extension CategoryViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        // set up reusable cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CateItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
-//        if let category = categories?[indexPath.row] {
-//            // set title for cell
-//            cell.textLabel?.text = category.name
-//        }
         
         cell.accessoryType = .disclosureIndicator
         
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-//        context.delete(categories[indexPath.row])
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 //        
-//        categories.remove(at: indexPath.row)
 //        
-//        saveCategories()
-        
-        if let cate = categories?[indexPath.row] {
-            do {
-                try realm.write {
-                    realm.delete(cate)
-                }
-            } catch {
-                print("Error deleting cate from categories, \(error)")
-            }
-        }
-        
-        tableView.reloadData()
-    }
+//        if let cate = categories?[indexPath.row] {
+//            do {
+//                try realm.write {
+//                    realm.delete(cate)
+//                }
+//            } catch {
+//                print("Error deleting cate from categories, \(error)")
+//            }
+//        }
+//        
+//        tableView.reloadData()
+//    }
 }
