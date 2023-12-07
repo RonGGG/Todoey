@@ -1,19 +1,25 @@
-![App Brewery Banner](https://github.com/londonappbrewery/Images/blob/master/AppBreweryBanner.png)
+# Todoey
 
+## Introduction
+Todoey is a streamlined and efficient iOS to-do list application designed to help users keep track of daily tasks and enhance organization in both life and work. With Todoey, you can easily add, manage, and monitor your day-to-day tasks and agendas.
 
-# Todoey ✓
+## Libraries used
+- Realm
 
-## Our Goal
+## Features 
+- Task Addition: 
+Quickly add new tasks to your to-do list.
+- Task Organization: 
+Organize your tasks by categories or priorities.
+- Progress Tracking: 
+Easily track the completion status of each task.
+- User-Friendly Interface: 
+A clean and intuitive user interface for easy navigation and use.
 
-The objective of this tutorial is to understand how to save data in iOS. We'll look at various choices and learn to use UserDefaults, Core Data and Realm.
-
-
-## What you will create
-
-A todolist app to keep track of all your tasks.
-
-
->This is a companion project to The App Brewery's Complete iOS Development Bootcamp, check out the full course at [www.appbrewery.co](https://www.appbrewery.co/)
-
-![End Banner](https://github.com/londonappbrewery/Images/blob/master/readme-end-banner.png)
+## Installation
+To install Todoey, clone the repository and open it with Xcode:
+```
+git clone https://github.com/RonGGG/Todoey.git
+```
+Then, you can run the application directly on a simulator or connected iOS device.
 
